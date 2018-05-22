@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "morgan": "^1.9.0",
     "react": "^15.5.4",
@@ -19,5 +20,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-   "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001"
 }

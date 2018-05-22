@@ -1,24 +1,27 @@
-import React, {Component} from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
-import './App.css';
-import GamePage from '../GamePage/GamePage';
-import SettingsPage from '../SettingsPage/SettingsPage';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "./App.css";
+import GamePage from "../GamePage/GamePage";
+import SettingsPage from "../SettingsPage/SettingsPage";
+import HighScoresPage from "../HighScoresPage/HighScoresPage";
 
 let colorTable = [
-  {name: 'Easy', colors: ['#7CCCE5', '#FDE47F', '#E04644', '#B576AD']},
-  {name: 'Moderate', colors: ['#7CCCE5', '#FDE47F', '#E04644', '#B576AD', '#B7D968']},
-  {name: 'Difficult', colors: ['#7CCCE5', '#FDE47F', '#E04644', '#B576AD', '#B7D968', '#555E7B']}
+  { name: "Easy", colors: ["#7CCCE5", "#FDE47F", "#E04644", "#B576AD"] },
+  {
+    name: "Moderate",
+    colors: ["#7CCCE5", "#FDE47F", "#E04644", "#B576AD", "#B7D968"]
+  },
+  {
+    name: "Difficult",
+    colors: ["#7CCCE5", "#FDE47F", "#E04644", "#B576AD", "#B7D968", "#555E7B"]
+  }
 ];
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = Object.assign(
-      {difficultyLevel: 0, colors: colorTable[0].colors},
+      { difficultyLevel: 0, colors: colorTable[0].colors },
       this.getInitialState()
     );
   }
@@ -50,24 +53,24 @@ class App extends Component {
     return new Array(4).fill().map(dummy => Math.floor(Math.random() * size));
   }
 
-  setDifficulty = (level) => {
+  setDifficulty = level => {
     this.setState({
       difficultyLevel: level,
       colors: colorTable[level].colors
     });
-  }
+  };
 
   /*---------- Callback Methods ----------*/
 
-  handleColorSelection = (colorIdx) => {
-    this.setState({selColorIdx: colorIdx});
-  }
+  handleColorSelection = colorIdx => {
+    this.setState({ selColorIdx: colorIdx });
+  };
 
   handleNewGameClick = () => {
     this.setState(this.getInitialState());
-  }
+  };
 
-  handlePegClick = (pegIdx) => {
+  handlePegClick = pegIdx => {
     let currentGuessIdx = this.state.guesses.length - 1;
 
     // Always replace objects/arrays with NEW versions
@@ -84,7 +87,7 @@ class App extends Component {
     this.setState({
       guesses: guessesCopy
     });
-  }
+  };
 
   handleScoreClick = () => {
     let currentGuessIdx = this.state.guesses.length - 1;
@@ -94,7 +97,8 @@ class App extends Component {
     let guessCodeCopy = [...this.state.guesses[currentGuessIdx].code];
     let secretCodeCopy = [...this.state.code];
 
-    let perfect = 0, almost = 0;
+    let perfect = 0,
+      almost = 0;
 
     // First pass computes number of "perfect"
     guessCodeCopy.forEach((code, idx) => {
@@ -128,23 +132,28 @@ class App extends Component {
     // Finally, update the state with the NEW guesses array
     this.setState(prevState => ({
       guesses: guessesCopy,
-      finalTime: (perfect === 4) ? prevState.elapsedTime : 0
+      finalTime: perfect === 4 ? prevState.elapsedTime : 0
     }));
-  }
+  };
 
   handleTick = () => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       elapsedTime: ++prevState.elapsedTime
     }));
-  }
+  };
 
   render() {
     return (
       <div>
-        <header className='header-footer'>R E A C T &nbsp;&nbsp; M A S T E R M I N D</header>
+        <header className="header-footer">
+          R E A C T &nbsp;&nbsp; M A S T E R M I N D
+        </header>
         <Router>
-            <Switch>
-              <Route exact path='/' render={() =>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => (
                 <GamePage
                   colors={this.state.colors}
                   selColorIdx={this.state.selColorIdx}
@@ -157,16 +166,26 @@ class App extends Component {
                   handleTick={this.handleTick}
                   isTiming={!this.state.finalTime}
                 />
-              }/>
-              <Route exact path='/settings' render={() => 
+              )}
+            />
+            <Route
+              exact
+              path="/settings"
+              render={() => (
                 <SettingsPage
                   colorTable={colorTable}
                   difficultyLevel={this.state.difficultyLevel}
                   handleDifficultyChange={this.setDifficulty}
                   handleNewGame={this.handleNewGameClick}
                 />
-              }/>
-            </Switch>
+              )}
+            />
+            <Route
+              exact
+              path="/high-scores"
+              render={() => <HighScoresPage scores={this.state.scores} />}
+            />
+          </Switch>
         </Router>
       </div>
     );
